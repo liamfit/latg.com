@@ -69,18 +69,24 @@ npm run dev
 cd backend
 ```
 
-2. Install dependencies:
+2. Set up environment variables for local development:
+```bash
+cp env.example.json env.json
+# Edit env.json with your Facebook Page ID
+```
+
+3. Install dependencies:
 ```bash
 cd fetch-gigs
 npm install
 ```
 
-3. Start the local API:
+4. Start the local API:
 ```bash
 sam local start-api
 ```
 
-4. The API will be available at `http://localhost:3000/gigs`
+5. The API will be available at `http://localhost:3000/gigs`
 
 ### Available Scripts
 
@@ -148,7 +154,7 @@ aws ssm put-parameter \
   --value "YOUR_FACEBOOK_PAGE_ACCESS_TOKEN" \
   --type "SecureString" \
   --description "Facebook Page Access Token for Lunar and the Groove" \
-  --profile latg \
+  --profile PROFILE_NAME \
   --region eu-west-2
 ```
 
@@ -156,8 +162,8 @@ aws ssm put-parameter \
 ```bash
 cd backend
 sam build && sam deploy \
-  --parameter-overrides FacebookPageId=256098590913842 \
-  --profile latg \
+  --parameter-overrides FacebookPageId=PAGE_ID \
+  --profile PROFILE_NAME \
   --region eu-west-2 \
   --stack-name latg-backend-stack \
   --resolve-s3 \
@@ -171,31 +177,38 @@ aws ssm put-parameter \
   --value "NEW_FACEBOOK_TOKEN" \
   --type "SecureString" \
   --overwrite \
-  --profile latg \
+  --profile PROFILE_NAME \
   --region eu-west-2
 ```
 
 ### Frontend Deployment
 
-1. **Create environment file** for production:
+1. **Set up environment variables**:
+   - Copy `frontend/env.example` to create your environment files
+   - For development: `cp env.example .env.development`
+   - For production: `cp env.example .env.production`
+   - Update the API URL in `.env.production` with your actual API Gateway URL
+
+2. **Build the project**:
 ```bash
 cd frontend
-echo "VITE_API_URL=https://your-api-gateway-url.amazonaws.com/Prod/gigs" > .env.production
-echo "VITE_USE_MOCK_DATA=false" >> .env.production
-```
-
-2. **For development**, create `.env.development`:
-```bash
-echo "VITE_API_URL=http://localhost:3000/gigs" > .env.development
-echo "VITE_USE_MOCK_DATA=true" >> .env.development
-```
-
-3. Build the project:
-```bash
 npm run build
 ```
 
-4. Deploy the `dist` folder to your hosting service (Netlify, Vercel, GitHub Pages, etc.)
+3. **Deploy to S3 + CloudFront** (if using AWS):
+```bash
+# Sync to S3
+aws s3 sync dist/ s3://your-bucket-name --delete --profile PROFILE_NAME --region eu-west-2
+
+# Invalidate CloudFront cache
+aws cloudfront create-invalidation \
+  --distribution-id YOUR_CLOUDFRONT_DISTRIBUTION_ID \
+  --paths "/*" \
+  --profile PROFILE_NAME \
+  --region eu-west-2
+```
+
+4. **Alternative**: Deploy the `dist` folder to other hosting services (Netlify, Vercel, GitHub Pages, etc.)
 
 ## Configuration
 
@@ -205,13 +218,14 @@ npm run build
 - `/latg/facebook/access-token` - Facebook Page Access Token (SecureString)
 
 #### Frontend
-- `USE_MOCK_DATA` - Set to `true` in `GigCarousel.tsx` for testing with mock data
+- `VITE_API_URL` - API Gateway URL for production, localhost for development
+- `VITE_USE_MOCK_DATA` - Set to `true` for testing with mock data
 
 ### API Gateway Caching
 
 The backend uses API Gateway caching with:
 - **Cache Size**: 0.5GB
-- **TTL**: 24 hours
+- **TTL**: 1 hour
 - **Encryption**: Enabled
 
 This provides excellent performance for low-traffic sites while keeping costs minimal.
@@ -222,7 +236,7 @@ This provides excellent performance for low-traffic sites while keeping costs mi
 
 The frontend includes a testing mode that can generate mock gig data:
 
-1. Set `USE_MOCK_DATA = true` in `GigCarousel.tsx`
+1. Set `VITE_USE_MOCK_DATA=true` in your environment file
 2. Use the testing controls to adjust the number of mock gigs
 3. Test different carousel states (0, 1, 2, 3, 5 gigs)
 
