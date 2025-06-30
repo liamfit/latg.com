@@ -12,15 +12,6 @@ Globals:
     Timeout: 30
     MemorySize: 256
     Runtime: nodejs18.x
-  Api:
-    CacheClusterEnabled: true
-    CacheClusterSize: '0.5'  # 0.5GB cache (smallest available)
-    MethodSettings:
-      - ResourcePath: "/*"
-        HttpMethod: "*"
-        CachingEnabled: true
-        CacheTtlInSeconds: 3600
-        CacheDataEncrypted: true
 
 Resources:
   # IAM Role for Lambda to access SSM
