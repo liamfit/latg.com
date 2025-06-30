@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "PhosphateInline";
+  src: url("./fonts/PhosphateInline.ttf") format("truetype");
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+h1 {
+  font-family: "PhosphateInline", sans-serif;
+}
+
+.slick-slide > div {
+  margin: 0 10px;
+}
+
+/* The container that holds the dots */
+.slick-dots {
+  bottom: -30px; /* Adjust the position of the dots */
+}
+
+/* Each individual dot */
+.slick-dots li {
+  margin: 0 5px; /* Adjust the space between the dots */
+}
+
+/* The button inside each dot */
+.slick-dots li button {
+  font-size: 0; /* Remove the default number inside the dot */
+  line-height: 0;
+  height: 20px; /* Adjust the size of the dot */
+  width: 20px; /* Adjust the size of the dot */
+  border-radius: 50%;
+  background: transparent; /* Adjust the color of the active dot */
+  border: 2px solid white; /* Add a border to the active dot */
+}
+
+/* The button inside the active dot */
+.slick-dots li.slick-active button {
+  background: white; /* Adjust the color of the dot */
+}
+
+.slick-dots li button:before {
+  content: none;
+}
+
+.slick-prev:before {
+  font-size: 30px; /* Adjust the size of the arrow */
+  color: white; /* Adjust the color of the arrow */
+}
+
+/* The next arrow */
+.slick-next:before {
+  font-size: 30px; /* Adjust the size of the arrow */
+  color: white; /* Adjust the color of the arrow */
+}

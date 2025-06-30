@@ -1,0 +1,14 @@
+{
+  "name": "fetch-gigs-lambda",
+  "version": "1.0.0",
+  "description": "Lambda function to fetch Facebook events for Lunar and the Groove",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo 'No tests yet'"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.1531.0"
+  }
+} 
